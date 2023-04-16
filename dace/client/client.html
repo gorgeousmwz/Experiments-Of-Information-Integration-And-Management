@@ -1,0 +1,652 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="utf-8">
+    <!--声明文档兼容模式，表示使用IE浏览器的最新模式，告诉IE浏览器，无论是否用DTD声明文档标准，IE8/9都会以IE8引擎来渲染页面。-->
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <!--设置视口的宽度(值为设备的理想宽度)，页面初始缩放值<理想宽度/可见宽度>-->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- 上述3个meta标签*必须*放在最前面，任何其他内容都*必须*跟随其后！ -->
+    <title>个人信息采集</title>
+    <!-- 引入css -->
+    <link rel="stylesheet" href="./layui/css/layui.css">
+</head>
+
+<body>
+    <div style="text-align:center; padding:40px;">
+        <h1>信息系统集成与管理</h1>
+    </div>
+    <!--功能面板-->
+    <div class="layui-row layui-col-space15" style="width:100%; display:flex;justify-content: center;">
+        <!--信息录入-->
+        <div class="layui-col-md6" style="margin:0 10px; width:650px;">
+            <div class="layui-panel">
+                <div style="padding:30px; font-size:20px;">信息录入</div>
+                <form class="layui-form layui-form-pane" action="">
+                    <!--姓名-->
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">姓名</label>
+                        <div class="layui-input-block">
+                            <input id="name" type="text" name="name" class="layui-input" required lay-verify="required"
+                                placeholder="请输入姓名(少于8汉字)" autocomplete="off" maxlength="8">
+                        </div>
+                    </div>
+                    <!--学号-->
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">学号</label>
+                        <div class="layui-input-block">
+                            <input id="student-number" type="text" name="student-number" required lay-verify="required"
+                                placeholder="请输入学号" autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+                    <!--手机-->
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">手机</label>
+                        <div class="layui-input-block">
+                            <input id="tele-number" type="text" name="tele-number" required lay-verify="required"
+                                placeholder="请输入手机号码" autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+                    <!--邮箱-->
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">邮箱</label>
+                        <div class="layui-input-block">
+                            <input id="email" type="text" name="email" required lay-verify="required"
+                                placeholder="请输入邮箱" autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+                    <!--专业-->
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">专业</label>
+                        <div class="layui-input-block">
+                            <select id="major" name="major" lay-verify="required">
+                                <option value=""></option>
+                                <option value="0">遥感科学与技术专业遥感信息方向</option>
+                                <option value="1">遥感科学与技术专业摄影测量方向</option>
+                                <option value="2">遥感科学与技术专业地理信息工程方向</option>
+                                <option value="3">遥感科学与技术专业遥感仪器方向</option>
+                                <option value="4">地理国情监测专业</option>
+                                <option value="5">空间信息与数字技术专业</option>
+                            </select>
+                        </div>
+                    </div>
+                    <!--兴趣-->
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">兴趣</label>
+                        <div class="layui-input-block">
+                            <input id="interest" type="text" name="interest" class="layui-input" required
+                                lay-verify="required" placeholder="请输入兴趣爱好(少于32汉字)" autocomplete="off" maxlength="32">
+                        </div>
+                    </div>
+                    <!--生日-->
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">生日</label>
+                        <div class="layui-input-block">
+                            <input id="birthday" type="text" class="layui-input">
+                        </div>
+                    </div>
+                </form>
+                <!--提交与重置-->
+                <div style="text-align: center;">
+                    <button id="submit" class="custom-btn btn" onclick="submitData()" style="margin:3px 0;">提交</button>
+                    <button id="reset" type="reset" class="layui-btn layui-btn-primary" onclick="resetData()" style="margin:3px 0;">重置</button>
+                </div>
+            </div>
+        </div>
+        <!--信息展示-->
+        <div class="layui-col-md6" style="margin:0 10px; width:650px;">
+            <div class="layui-panel" style="height:537px;overflow:scroll;">
+                <div style="padding:30px; font-size:20px;">信息展示</div>
+                <table class="layui-table">
+                    <colgroup>
+                        <col width="120">
+                        <col width="240">
+                        <col width="240">
+                        <col width="240">
+                        <col width="240">
+                        <col width="240">
+                        <col width="120">
+                    </colgroup>
+                    <thead>
+                        <tr>
+                            <th>姓名</th>
+                            <th>学号</th>
+                            <th>电话</th>
+                            <th>邮箱</th>
+                            <th>专业</th>
+                            <th>兴趣</th>
+                            <th>生日</th>
+                        </tr>
+                    </thead>
+                    <tbody id="table-content">
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </div>
+
+    <!--菜单-->
+    <div class="layui-panel"
+        style="width:500px; height:35px; margin:15px auto; padding:20px; text-align:center; letter-spacing:15px; color:#009688">
+        <button id="refresh" class="custom-btn btn" style="width:50px;" onclick="refreshData()">
+            <i class="layui-icon layui-icon-refresh-3"></i>
+        </button>
+        <button id="retrieve" class="custom-btn btn" style="width:50px;" onclick="retrieveData()">
+            <i class="layui-icon layui-icon-search"></i>
+        </button>
+        <button id="update" class="custom-btn btn" style="width:50px;" onclick="updateData()">
+            <i class="layui-icon layui-icon-edit"></i>
+        </button>
+        <button id="delete" class="custom-btn btn" style="width:50px;" onclick="deleteData()">
+            <i class="layui-icon layui-icon-delete"></i>
+        </button>
+        <button id="help" class="custom-btn btn" style="width:50px;" onclick="helpData()">
+            <i class="layui-icon layui-icon-tips"></i>
+        </button>
+    </div>
+
+    <!-- js -->
+    <script src="./layui/layui.js"></script>
+    <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.6.1/jquery.js"></script>
+    <script>
+        //日期选择
+        layui.use('laydate', function () {
+            var laydate = layui.laydate;
+            //执行一个laydate实例
+            laydate.render({
+                elem: '#birthday' //指定元素
+            });
+        });
+        //获取数据
+        function getData() {
+            var name = document.getElementById('name');
+            var id = document.getElementById('student-number');
+            var phonenumber = document.getElementById('tele-number');
+            var email = document.getElementById('email');
+            var major = document.getElementById('major');
+            var interest = document.getElementById('interest');
+            var birthday = document.getElementById('birthday');
+            return {
+                'name': name.value,
+                'id': id.value,
+                'phonenumber': phonenumber.value,
+                'email': email.value,
+                'major': major.value,
+                'interest': interest.value,
+                'birthday': birthday.value
+            };
+        }
+        //验证数据
+        function validData(data) {
+            if(data.name==''||data.id==''||data.phonenumber==''||data.email==''||data.major==''||data.interest==''||data.birthday==''){//验证是否有未填项
+                console.warn('EmptyErr:请填写所有信息');
+                return 0;
+            }
+            else{
+                //验证姓名
+                var regex1 = /\d/;
+                if(regex1.test(data.name) === true) {//不能有数字
+                    console.warn("student-numberErr:请输入正确的姓名");
+                    return -1;
+                }
+                // 验证学号
+                var regex2 = /^(19\d{11}|20([0-1]\d{10}|2[0-2]\d{9}))$/;
+                if(regex2.test(data.id) === false) {
+                    console.warn("student-numberErr:请输入正确的学号");
+                    return -2;
+                }
+                //验证电话
+                var regex3 = /^[1]\d{10}$/;
+                if(regex3.test(data.phonenumber) === false) {
+                    console.warn("tele-numberErr:请输入正确的手机号码");
+                    return -3;
+                }
+                //验证邮箱
+                var regex4 = /^[A-Za-z\d]+([-_.][A-Za-z\d]+)*@([A-Za-z\d]+[-.])+[A-Za-z\d]{2,4}$/;
+                if(regex4.test(data.email) === false) {
+                    console.warn("emailErr:请输入正确的邮箱地址");
+                    return -4;
+                }
+                //验证生日
+                var regex5 = /^((19[2-9]\d{1})|(20(([0-1][0-9])|(2[0-2]))))\-((0?[1-9])|(1[0-2]))\-((0?[1-9])|([1-2][0-9])|30|31)$/;
+                if(regex5.test(data.birthday) === false) {
+                    console.warn("emailErr:请输入正确的生日");
+                    return -5;
+                }
+            }
+            return 1
+        }
+        //提交数据
+        function submitData() {
+            MajorMap={
+                '0':'遥感科学与技术专业遥感信息方向',
+                '1':'遥感科学与技术专业摄影测量方向',
+                '2':'遥感科学与技术专业地理信息工程方向',
+                '3':'遥感科学与技术专业遥感仪器方向',
+                '4':'地理国情监测专业',
+                '5':'空间信息与数字技术专业'
+            }
+            var data = getData();//获取数据
+            console.log('表单数据为:', data);
+            var flag=validData(data);//格式验证
+            if (flag == 1) {//格式验证成功
+                console.log('验证成功');
+                data['major']=MajorMap[data['major']];//专业转义
+                $.ajax({//向服务器发送数据
+                    type: 'POST',
+                    url: "http://localhost:5500/submitData",
+                    data: JSON.stringify(data),  //转化字符串 
+                    contentType: 'application/json; charset=UTF-8',
+                    success: function (res) { //成功的话，得到消息
+                        console.log('提交成功');
+                        alert("提交成功");
+                        showData(res);//刷新表格
+                    },
+                    error: function (responseStr) {
+                        console.warn('提交失败', responseStr);
+                        alert("提交失败");
+                    }
+                });
+                resetData();//重置数据
+            }
+            else{//验证失败
+                console.warn('验证失败');
+                if(flag==0) alert('验证失败:请填写所有信息');
+                if(flag==-1) alert('验证失败:请输入正确的姓名');
+                if(flag==-2) alert('验证失败:请输入正确的学号');
+                if(flag==-3) alert('验证失败:请输入正确的手机号码');
+                if(flag==-4) alert('验证失败:请输入正确的邮箱地址');
+                if(flag==-5) alert('验证失败:请请输入正确的生日');
+            }
+        }
+        //刷新数据
+        function refreshData(){
+            $.ajax({//向服务器发送数据
+                type: 'GET',
+                url: "http://localhost:5500/refreshData?method=descend",
+                contentType: 'application/json; charset=UTF-8',
+                success: function (res) { //成功的话，得到消息
+                    console.log('刷新成功');
+                    alert("刷新成功");
+                    showData(res);//刷新表格
+                },
+                error: function (responseStr) {
+                    console.warn('刷新失败', responseStr);
+                    alert("刷新失败");
+                }
+            });
+        }
+        //查询数据
+        function retrieveData(){
+            var map={//字段映射
+                '姓名':'name',
+                '学号':'id',
+                '电话':'phonenumber',
+                '邮箱':'email',
+                '专业':'major',
+                '兴趣':'interest',
+                '生日':'sbirthday'
+            };
+            var text=prompt('查询:','格式:字段名=查询值');//输入框
+            if(text!=null){//点击确定后
+                if(text.indexOf("=")!=-1){//格式正确
+                    var arr=text.split("=");
+                    if(arr[0] in map){
+                        var data={'flag':map[arr[0]],'value':arr[1]};//传输的数据
+                        $.ajax({//向服务器发送数据
+                            type: 'GET',
+                            url: "http://localhost:5500/retrieveData?flag="+data['flag']+"&value="+data['value']+"&method=descend",
+                            contentType: 'application/json; charset=UTF-8',
+                            success: function (res) { //成功的话，得到消息
+                                console.log('查询成功,结果为:',res);
+                                alert("查询成功,结果展示在右侧面板");
+                                showData(res);//刷新表格
+                            },
+                            error: function (responseStr) {
+                                console.warn('查询失败', responseStr);
+                                alert("查询失败");
+                            }
+                        });
+                    }
+                    else{
+                        alert('查询字段错误');
+                        console.warn('查询字段错误');
+                    }
+                }
+                else{
+                    alert('查询格式错误');
+                    console.warn('查询格式错误');
+                }
+            }
+        }
+        //更新数据
+        function updateData(){
+            var map={//字段映射
+                '姓名':'name',
+                '学号':'id',
+                '电话':'phonenumber',
+                '邮箱':'email',
+                '专业':'major',
+                '兴趣':'interest',
+                '生日':'birthday'
+            };
+            var text=prompt('请输入要更新数据的学号及字段更新值:',
+            '格式:学号&权限密码&字段名1=更新值1&字段名2=更新值2&...');//输入框
+            if(text!=null){//点击确定后
+                var arr=text.split("&");
+                if(arr.length>2){//格式正确
+                    if(arr[1]=='090012'){//权限密码正确
+                        var data={'id':arr[0]};
+                        var a=true;
+                        for(var i=2;i<arr.length;i++){
+                            var v=arr[i].split("=");
+                            if(v.length==2){
+                                data[map[v[0]]]=v[1];
+                            }
+                            else a=false;
+                        }
+                        if(a){
+                            $.ajax({//向服务器发送数据
+                                type: 'PUT',
+                                url: "http://localhost:5500/updateData",
+                                data: JSON.stringify(data),  //转化字符串 
+                                contentType: 'application/json; charset=UTF-8',
+                                success: function (res) { //成功的话，得到消息
+                                    if(res.length==0){
+                                        console.warn('学号不存在');
+                                        alert('学号不存在');
+                                    }
+                                    else{
+                                        console.log('更新成功');
+                                        alert("更新成功,更新数据学号为:"+arr[0]);
+                                        showData(res);//刷新表格
+                                    }
+                                },
+                                error: function (responseStr) {
+                                    console.warn('更新失败', responseStr);
+                                    alert("更新失败");
+                                }
+                            });
+                        }
+                        else{
+                            alert('更新格式错误');
+                            console.warn('更新格式错误');
+                        }
+                    }
+                    else{
+                        alert('密码错误,您没有权限更新数据');
+                        console.warn('密码错误');
+                    }
+                }
+                else{
+                    alert('更新格式错误');
+                    console.warn('更新格式错误');
+                }
+            }
+        }
+        //删除数据
+        function deleteData(){
+            var text=prompt('请输入要删除数据的学号:','格式:学号&权限密码');//输入框
+            if(text!=null){//点击确定后
+                if(text.indexOf("&")!=-1){//格式正确
+                    var arr=text.split("&");
+                    if(arr[1]=='090012'){//权限密码正确
+                        $.ajax({//向服务器发送数据
+                            type: 'DELETE',
+                            url: "http://localhost:5500/deleteData",
+                            data: JSON.stringify({'id':arr[0]}),  //转化字符串 
+                            contentType: 'application/json; charset=UTF-8',
+                            success: function (res) { //成功的话，得到消息
+                                console.log(res);
+                                if(res.length==0){
+                                    alert('查无此学号');
+                                    console.warn('查无此学号');
+                                }
+                                else{
+                                    console.log('删除成功');
+                                    alert("删除成功,删除数据学号为:"+text);
+                                    showData(res);//刷新表格
+                                }
+                            },
+                            error: function (responseStr) {
+                                console.warn('删除失败', responseStr);
+                                alert("删除失败");
+                            }
+                        });
+                    }
+                    else{
+                        alert('密码错误,您没有权限删除数据');
+                        console.warn('密码错误');
+                    }
+                }
+                else{
+                    alert('删除格式错误');
+                    console.warn('删除格式错误');
+                }
+            }
+        }
+        //提示数据
+        function helpData(){
+            alert('网站代号:gorgeous\n'+
+                '作者:马文卓\n'+
+                '时间:2022-12\n'+
+                '前端:html+css+javascript\n'+
+                '后端:python\n'+
+                '数据库:MySQL\n'+
+                '----------------------------------------------------------------------------\n'+
+                '操作tips:\n'+
+                '(1)左侧的【信息录入】面板用于信息收,按照格式规范填写完整信息表单,点击【提交】信息上传,并将已有数据展示在右侧的【信息展示】面板\n'+
+                '(2)格式规范为:\n'+
+                '   1>姓名不能有数字\n'+
+                '   2>学号长度为13位,前四位表示入学年份应该在1900-2022之间\n'+
+                '   3>电话号码长度为11位,首位是1\n'+
+                '   4>邮箱当中一定包含@和.,但不能以它们开头或结尾\n'+
+                '   5>生日格式为:年-月-日,且不能超过2022年\n'+
+                '(3)【重置】可以清空表单中的数据,以方便重新填写\n'+
+                '(4)位于正下方的【菜单】包含了【刷新】【查询】【编辑】【删除】【提示】五个功能按钮\n'+
+                '   1>刷新:重新获取数据库中数据,展示在【信息展示】\n'+
+                '   2>查询:在数据库中查询数据展示在【信息展示】,示例:学号=123456\n'+
+                '   3>编辑:在数据库中编辑指定数据的指定字段,刷新【信息展示】,考虑到安全性,此操作需要权限密码,示例:123&123&兴趣=123\n'+
+                '   4>删除:在数据库中删除指定数据,刷新【信息展示】,考虑到安全性,此操作需要权限密码,示例:123&123\n'+
+                '   5>提示:上方展示网站信息和操作提示\n'
+            );
+        }
+        //重置数据
+        function resetData() {
+            var name = document.getElementById('name');
+            var id = document.getElementById('student-number');
+            var phonenumber = document.getElementById('tele-number');
+            var email = document.getElementById('email');
+            var major = document.getElementById('major');
+            var interest = document.getElementById('interest');
+            var birthday = document.getElementById('birthday');
+            name.value = '';
+            id.value = '';
+            phonenumber.value = '';
+            email.value = '';
+            interest.value = '';
+            birthday.value = '';
+        }
+        //表格渲染
+        function showData(data){
+            var map={
+                0:'name',
+                1:'id',
+                2:'phonenumber',
+                3:'email',
+                4:'major',
+                5:'interest',
+                6:'birthday'
+            };
+            //清空表格
+            var tb =document.getElementById("table-content");
+            var pObjs = tb.childNodes;
+            for (var i = pObjs.length - 1; i >= 0; i--)// 一定要倒序，正序是删不干净的
+                tb.removeChild(pObjs[i]);
+            //添加数据
+            for(var index in data){
+                var tr=document.createElement("tr");//创建一行
+                var line=data[index];//获取每一行数据
+                var i=0;
+                while(i<7){
+                    var td=document.createElement("td");//创建项
+                    td.style.whiteSpace="nowrap";
+                    var item=line[map[i]];
+                    td.innerText=item;//赋值项
+                    tr.appendChild(td);//项绑定到行
+                    i+=1;
+                }
+                var tb=document.getElementById("table-content");
+                tb.appendChild(tr);//绑定表体
+            }
+        }
+    </script>
+
+    <!--css-->
+    <style>
+        html,body,.layui-form {
+            width: 100%;
+            height: 100%;
+            margin: 0;
+        }
+
+        .layui-form {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .layui-form-item {
+            width: 500px;
+            margin: 10px auto;
+        }
+
+        button {
+            font-size: smaller;
+        }
+
+        .custom-btn {
+            width: 130px;
+            height: 40px;
+            color: #fff;
+            border-radius: 5px;
+            padding: 10px 25px;
+            font-family: 'Lato', sans-serif;
+            font-weight: 500;
+            background: transparent;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            display: inline-block;
+            box-shadow: inset 2px 2px 2px 0px rgba(255, 255, 255, .5),
+                7px 7px 20px 0px rgba(0, 0, 0, .1),
+                4px 4px 5px 0px rgba(0, 0, 0, .1);
+            outline: none;
+        }
+
+        .custom-btn {
+            width: 130px;
+            height: 40px;
+            color: #fff;
+            border-radius: 5px;
+            padding: 10px 25px;
+            font-family: 'Lato', sans-serif;
+            font-weight: 500;
+            background: transparent;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            display: inline-block;
+            box-shadow: inset 2px 2px 2px 0px rgba(255, 255, 255, .5),
+                7px 7px 20px 0px rgba(0, 0, 0, .1),
+                4px 4px 5px 0px rgba(0, 0, 0, .1);
+            outline: none;
+        }
+
+        .btn {
+            background-color: #4dccc6;
+            background-image: linear-gradient(315deg, #4dccc6 0%, #96e4df 74%);
+            line-height: 42px;
+            padding: 0;
+            border: none;
+        }
+
+        .btn:hover {
+            background-color: #89d8d3;
+            background-image: linear-gradient(315deg, #89d8d3 0%, #03c8a8 74%);
+        }
+
+        .btn span {
+            position: relative;
+            display: block;
+            width: 100%;
+            height: 100%;
+        }
+
+        .btn:before,
+        .btn:after {
+            position: absolute;
+            content: "";
+            right: 0;
+            top: 0;
+            box-shadow: 4px 4px 6px 0 rgba(255, 255, 255, .9),
+                -4px -4px 6px 0 rgba(116, 125, 136, .2),
+                inset -4px -4px 6px 0 rgba(255, 255, 255, .9),
+                inset 4px 4px 6px 0 rgba(116, 125, 136, .3);
+            transition: all 0.3s ease;
+        }
+
+        .btn:before {
+            height: 0%;
+            width: .1px;
+        }
+
+        .btn:after {
+            width: 0%;
+            height: .1px;
+        }
+
+        .btn:hover:before {
+            height: 100%;
+        }
+
+        .btn:hover:after {
+            width: 100%;
+        }
+
+        .btn span:before,
+        .btn span:after {
+            position: absolute;
+            content: "";
+            left: 0;
+            bottom: 0;
+            box-shadow: 4px 4px 6px 0 rgba(255, 255, 255, .9),
+                -4px -4px 6px 0 rgba(116, 125, 136, .2),
+                inset -4px -4px 6px 0 rgba(255, 255, 255, .9),
+                inset 4px 4px 6px 0 rgba(116, 125, 136, .3);
+            transition: all 0.3s ease;
+        }
+
+        .btn span:before {
+            width: .1px;
+            height: 0%;
+        }
+
+        .btn span:after {
+            width: 0%;
+            height: .1px;
+        }
+
+        .btn span:hover:before {
+            height: 100%;
+        }
+
+        .btn span:hover:after {
+            width: 100%;
+        }
+    </style>
+</body>
+
+</html>
